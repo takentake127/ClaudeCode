@@ -1,0 +1,12 @@
+# 機密情報（トークン・APIキーなど）
+discord-bot/.env
+
+# Discord Bot のデータベース
+discord-bot/data/
+
+# Claude Code の内部データ
+.claude/
+
+# Python キャッシュ
+__pycache__/
+*.pyc
