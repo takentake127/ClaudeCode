@@ -10,3 +10,6 @@ discord-bot/data/
 # Python キャッシュ
 __pycache__/
 *.pyc
+
+# Todoアプリのデータベース
+todo-app/*.db
