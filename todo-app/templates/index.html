@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+
+        <!-- 新しい最上位タスクを追加するフォーム -->
+        <form action="/add" method="POST" class="add-form">
+            <input type="text" name="title" placeholder="新しいタスクを入力..." required>
+            <button type="submit">追加</button>
+        </form>
+
+        <!-- Todoの一覧（再帰的に表示） -->
+        {% macro render_todos(parent_todos) %}
+        <ul class="todo-list">
+            {% for todo in parent_todos %}
+            <li>
+                <div class="todo-item {% if todo.done %}done{% endif %}">
+                    <a href="/toggle/{{ todo.id }}" class="todo-text" id="text-{{ todo.id }}">{{ todo.title }}</a>
+                    <div class="todo-actions">
+                        <button class="edit-btn" onclick="startEdit({{ todo.id }}, '{{ todo.title | e }}')">編集</button>
+                        <a href="/delete/{{ todo.id }}" class="delete-btn">削除</a>
+                    </div>
+                </div>
+                <!-- 編集フォーム（普段は非表示） -->
+                <form action="/edit/{{ todo.id }}" method="POST" class="edit-form" id="edit-{{ todo.id }}" style="display:none;">
+                    <input type="text" name="title" value="{{ todo.title }}" required>
+                    <button type="submit">保存</button>
+                    <button type="button" onclick="cancelEdit({{ todo.id }})">取消</button>
+                </form>
+
+                <!-- サブタスク追加フォーム -->
+                <form action="/add" method="POST" class="sub-add-form">
+                    <input type="hidden" name="parent_id" value="{{ todo.id }}">
+                    <input type="text" name="title" placeholder="サブタスクを追加..." required>
+                    <button type="submit">+</button>
+                </form>
+
+                <!-- 子タスクを再帰的に表示 -->
+                {% set children = get_children(todo.id) %}
+                {% if children %}
+                    {{ render_todos(children) }}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endmacro %}
+
+        {% if top_todos %}
+            {{ render_todos(top_todos) }}
+        {% else %}
+            <p class="empty">タスクがありません</p>
+        {% endif %}
+    </div>
+
+    <script>
+    function startEdit(id, currentTitle) {
+        // タスク表示を隠して編集フォームを出す
+        document.getElementById('text-' + id).closest('.todo-item').style.display = 'none';
+        var form = document.getElementById('edit-' + id);
+        form.style.display = 'flex';
+        form.querySelector('input[name="title"]').focus();
+    }
+
+    function cancelEdit(id) {
+        // 編集フォームを隠してタスク表示を戻す
+        document.getElementById('edit-' + id).style.display = 'none';
+        document.getElementById('text-' + id).closest('.todo-item').style.display = 'flex';
+    }
+    </script>
+</body>
+</html>
