@@ -1,0 +1,216 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", "Hiragino Sans", sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #2c3e50;
+}
+
+.add-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.add-form input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.add-form input[type="text"]:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.add-form button {
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.add-form button:hover {
+    background-color: #2980b9;
+}
+
+/* Todoリスト（階層構造） */
+.todo-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.todo-list .todo-list {
+    padding-left: 24px;
+    margin-top: 4px;
+    border-left: 2px solid #e0e0e0;
+}
+
+.todo-list > li {
+    margin-bottom: 8px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item.done .todo-text {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.todo-text {
+    text-decoration: none;
+    color: #333;
+    flex: 1;
+}
+
+.todo-text:hover {
+    color: #3498db;
+}
+
+.delete-btn {
+    color: #e74c3c;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 12px;
+}
+
+.delete-btn:hover {
+    text-decoration: underline;
+}
+
+/* サブタスク追加フォーム */
+.sub-add-form {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.sub-add-form input[type="text"] {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.sub-add-form input[type="text"]:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.sub-add-form button {
+    padding: 6px 12px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sub-add-form button:hover {
+    background-color: #7f8c8d;
+}
+
+.todo-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    color: #3498db;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    text-decoration: underline;
+}
+
+/* 編集フォーム */
+.edit-form {
+    display: flex;
+    gap: 4px;
+    padding: 8px 16px;
+    background-color: #fff9e6;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.edit-form input[type="text"] {
+    flex: 1;
+    padding: 8px 10px;
+    border: 2px solid #f39c12;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.edit-form input[type="text"]:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.edit-form button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.edit-form button[type="submit"] {
+    background-color: #27ae60;
+    color: white;
+}
+
+.edit-form button[type="submit"]:hover {
+    background-color: #219a52;
+}
+
+.edit-form button[type="button"] {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.edit-form button[type="button"]:hover {
+    background-color: #7f8c8d;
+}
+
+.empty {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 20px;
+}
