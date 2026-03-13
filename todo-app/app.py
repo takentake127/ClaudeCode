@@ -61,8 +61,10 @@ def get_all_descendant_ids(parent_id):
 @app.route("/")
 def index():
     """メインページ: Todoの一覧を表示する"""
+    db = get_db()
+    all_todos = db.execute("SELECT * FROM todos").fetchall()
     top_todos = get_children(None)
-    return render_template("index.html", top_todos=top_todos, get_children=get_children)
+    return render_template("index.html", top_todos=top_todos, get_children=get_children, all_todos=all_todos)
 
 
 @app.route("/add", methods=["POST"])
