@@ -53,19 +53,19 @@
                         <span class="cancel-delete" onclick="cancelDelete({{ todo.id }})">いいえ</span>
                     </div>
                 </div>
-                <!-- 編集フォーム（普段は非表示） -->
-                <form action="/edit/{{ todo.id }}" method="POST" class="edit-form" id="edit-{{ todo.id }}" style="display:none;">
-                    <input type="text" name="title" value="{{ todo.title }}" required>
-                    <button type="submit">保存</button>
-                    <button type="button" onclick="cancelEdit({{ todo.id }})">取消</button>
-                </form>
-
-                <!-- サブタスク追加フォーム -->
-                <form action="/add" method="POST" class="sub-add-form">
-                    <input type="hidden" name="parent_id" value="{{ todo.id }}">
-                    <input type="text" name="title" placeholder="サブタスクを追加..." required>
-                    <button type="submit">+</button>
-                </form>
+                <!-- 編集パネル（普段は非表示） -->
+                <div class="edit-panel" id="edit-{{ todo.id }}" style="display:none;">
+                    <form action="/edit/{{ todo.id }}" method="POST" class="edit-form">
+                        <input type="text" name="title" value="{{ todo.title }}" required>
+                        <button type="submit">保存</button>
+                        <button type="button" onclick="cancelEdit({{ todo.id }})">取消</button>
+                    </form>
+                    <form action="/add" method="POST" class="sub-add-form">
+                        <input type="hidden" name="parent_id" value="{{ todo.id }}">
+                        <input type="text" name="title" placeholder="サブタスクを追加..." required>
+                        <button type="submit">+</button>
+                    </form>
+                </div>
 
                 <!-- 子タスクを再帰的に表示 -->
                 {% set children = get_children(todo.id) %}
