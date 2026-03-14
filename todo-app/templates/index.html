@@ -8,11 +8,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Todo App</h1>
+        <div class="header">
+            <h1>Todo</h1>
+        </div>
+
+        <!-- Stats -->
+        {% set ns = namespace(total=0, done=0) %}
+        {% for todo in all_todos|default([]) %}
+            {% set ns.total = ns.total + 1 %}
+            {% if todo.done %}{% set ns.done = ns.done + 1 %}{% endif %}
+        {% endfor %}
+        {% if ns.total > 0 %}
+        <div class="stats">
+            <div class="stat-chip">
+                全 <span class="count">{{ ns.total }}</span> 件
+            </div>
+            <div class="stat-chip done-stat">
+                完了 <span class="count">{{ ns.done }}</span> 件
+            </div>
+        </div>
+        {% endif %}
 
         <!-- 新しい最上位タスクを追加するフォーム -->
         <form action="/add" method="POST" class="add-form">
-            <input type="text" name="title" placeholder="新しいタスクを入力..." required>
+            <input type="text" name="title" placeholder="新しいタスクを追加..." required>
             <button type="submit">追加</button>
         </form>
 
@@ -21,11 +40,17 @@
         <ul class="todo-list">
             {% for todo in parent_todos %}
             <li>
-                <div class="todo-item {% if todo.done %}done{% endif %}">
+                <div class="todo-item {% if todo.done %}done{% endif %}" id="item-{{ todo.id }}">
+                    <a href="/toggle/{{ todo.id }}" class="todo-check">✓</a>
                     <a href="/toggle/{{ todo.id }}" class="todo-text" id="text-{{ todo.id }}">{{ todo.title }}</a>
                     <div class="todo-actions">
                         <button class="edit-btn" onclick="startEdit({{ todo.id }}, '{{ todo.title | e }}')">編集</button>
-                        <a href="/delete/{{ todo.id }}" class="delete-btn">削除</a>
+                        <button class="delete-btn" onclick="confirmDelete({{ todo.id }})">削除</button>
+                    </div>
+                    <div class="delete-confirm" id="confirm-{{ todo.id }}">
+                        <span>削除する？</span>
+                        <a href="/delete/{{ todo.id }}">はい</a>
+                        <span class="cancel-delete" onclick="cancelDelete({{ todo.id }})">いいえ</span>
                     </div>
                 </div>
                 <!-- 編集フォーム（普段は非表示） -->
@@ -55,23 +80,36 @@
         {% if top_todos %}
             {{ render_todos(top_todos) }}
         {% else %}
-            <p class="empty">タスクがありません</p>
+            <div class="empty">
+                <div class="empty-icon">☐</div>
+                <div class="empty-text">タスクがまだありません</div>
+            </div>
         {% endif %}
     </div>
 
     <script>
     function startEdit(id, currentTitle) {
-        // タスク表示を隠して編集フォームを出す
-        document.getElementById('text-' + id).closest('.todo-item').style.display = 'none';
+        document.getElementById('item-' + id).style.display = 'none';
         var form = document.getElementById('edit-' + id);
         form.style.display = 'flex';
         form.querySelector('input[name="title"]').focus();
     }
 
     function cancelEdit(id) {
-        // 編集フォームを隠してタスク表示を戻す
         document.getElementById('edit-' + id).style.display = 'none';
-        document.getElementById('text-' + id).closest('.todo-item').style.display = 'flex';
+        document.getElementById('item-' + id).style.display = 'flex';
+    }
+
+    function confirmDelete(id) {
+        var item = document.getElementById('item-' + id);
+        item.querySelector('.todo-actions').style.display = 'none';
+        item.querySelector('.delete-confirm').style.display = 'flex';
+    }
+
+    function cancelDelete(id) {
+        var item = document.getElementById('item-' + id);
+        item.querySelector('.delete-confirm').style.display = 'none';
+        item.querySelector('.todo-actions').style.display = 'flex';
     }
     </script>
 </body>
