@@ -258,16 +258,17 @@ body {
     border-color: rgba(239, 68, 68, 0.2);
 }
 
-/* ── Sub-add Form ── */
-.sub-add-form {
-    display: none;
-    gap: 4px;
-    margin-top: 4px;
-    margin-left: 36px;
+/* ── Edit Panel ── */
+.edit-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.todo-list > li:hover > .sub-add-form {
+/* ── Sub-add Form ── */
+.sub-add-form {
     display: flex;
+    gap: 4px;
 }
 
 .sub-add-form input[type="text"] {
@@ -428,10 +429,6 @@ body {
 
     .todo-actions {
         opacity: 1;
-    }
-
-    .sub-add-form {
-        display: flex;
     }
 
     .stats {
