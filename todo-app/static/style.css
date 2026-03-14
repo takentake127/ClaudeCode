@@ -153,6 +153,19 @@ body {
     gap: 4px;
 }
 
+/* 階層が深くなるほど背景を少し明るくする */
+.todo-list .todo-list .todo-item {
+    background: #212130;
+}
+
+.todo-list .todo-list .todo-list .todo-item {
+    background: #28283a;
+}
+
+.todo-list .todo-list .todo-list .todo-list .todo-item {
+    background: #2f2f44;
+}
+
 /* ── Todo Item ── */
 .todo-item {
     display: flex;
