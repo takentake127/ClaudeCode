@@ -85,14 +85,41 @@ def add():
     return redirect(url_for("index"))
 
 
+def set_all_descendants(todo_id, done_value):
+    """子・孫…すべてのタスクの完了状態を一括変更する"""
+    db = get_db()
+    children = db.execute("SELECT id FROM todos WHERE parent_id = ?", (todo_id,)).fetchall()
+    for child in children:
+        db.execute("UPDATE todos SET done = ? WHERE id = ?", (done_value, child["id"]))
+        set_all_descendants(child["id"], done_value)
+
+
+def check_parent_completion(todo_id):
+    """親タスクの子がすべて完了していたら、親も自動的に完了にする。
+    逆に、子が1つでも未完了なら親を未完了に戻す。祖先まで再帰的にチェックする。"""
+    db = get_db()
+    todo = db.execute("SELECT * FROM todos WHERE id = ?", (todo_id,)).fetchone()
+    if not todo or todo["parent_id"] is None:
+        return
+    parent_id = todo["parent_id"]
+    siblings = db.execute("SELECT done FROM todos WHERE parent_id = ?", (parent_id,)).fetchall()
+    all_done = all(s["done"] for s in siblings)
+    db.execute("UPDATE todos SET done = ? WHERE id = ?", (1 if all_done else 0, parent_id))
+    check_parent_completion(parent_id)
+
+
 @app.route("/toggle/<int:todo_id>")
 def toggle(todo_id):
-    """Todoの完了/未完了を切り替える"""
+    """Todoの完了/未完了を切り替える（子・親も連動）"""
     db = get_db()
     todo = db.execute("SELECT * FROM todos WHERE id = ?", (todo_id,)).fetchone()
     if todo:
         new_done = 0 if todo["done"] else 1
         db.execute("UPDATE todos SET done = ? WHERE id = ?", (new_done, todo_id))
+        # 完了/未完了を子タスクにも伝播
+        set_all_descendants(todo_id, new_done)
+        # 親タスクの自動完了/未完了をチェック
+        check_parent_completion(todo_id)
         db.commit()
     return redirect(url_for("index"))
 
