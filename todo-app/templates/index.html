@@ -41,8 +41,8 @@
             {% for todo in parent_todos %}
             <li>
                 <div class="todo-item {% if todo.done %}done{% endif %}" id="item-{{ todo.id }}">
-                    <a href="/toggle/{{ todo.id }}" class="todo-check">✓</a>
-                    <a href="/toggle/{{ todo.id }}" class="todo-text" id="text-{{ todo.id }}">{{ todo.title }}</a>
+                    <a href="#" class="todo-check" onclick="toggleWithGlow(event, {{ todo.id }}, {{ 'true' if todo.done else 'false' }})">✓</a>
+                    <a href="#" class="todo-text" id="text-{{ todo.id }}" onclick="toggleWithGlow(event, {{ todo.id }}, {{ 'true' if todo.done else 'false' }})">{{ todo.title }}</a>
                     <div class="todo-actions">
                         <button class="edit-btn" onclick="startEdit({{ todo.id }}, '{{ todo.title | e }}')">編集</button>
                         <button class="delete-btn" onclick="confirmDelete({{ todo.id }})">削除</button>
@@ -110,6 +110,15 @@
         var item = document.getElementById('item-' + id);
         item.querySelector('.delete-confirm').style.display = 'none';
         item.querySelector('.todo-actions').style.display = 'flex';
+    }
+
+    function toggleWithGlow(event, id, isDone) {
+        event.preventDefault();
+        var item = document.getElementById('item-' + id);
+        item.classList.add(isDone ? 'glow-undone' : 'glow-done');
+        setTimeout(function() {
+            window.location.href = '/toggle/' + id;
+        }, 500);
     }
     </script>
 </body>
